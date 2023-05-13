@@ -1,0 +1,14 @@
+[GFX]
+width = 1280
+height = 720
+vsync = true
+monitor = 0
+fullscreen = false
+
+[Controls]
+exit = "Escape"
+up = "W"
+down = "S"
+right = "D"
+left = "A"
+jump = "Space"
