@@ -78,7 +78,8 @@ namespace gfx {
 		passes["Main"]->Begin(commandBuffer, imageIndex);
 
 		//TODO: draw here
-		triRenderer.Render(commandBuffer);
+		triRenderer.Render(commandBuffer,
+			global.platform->swapchain->CurrentFrame());
 
 		vkCmdEndRenderPass(commandBuffer);
 	}
@@ -89,20 +90,25 @@ namespace gfx {
 		VULKAN_CHECK(vkEndCommandBuffer(commandBuffer),
 			"Failed to end command buffer!");
 
-		VkResult result = global.platform->swapchain->SubmitFrame(commandBuffer, &imageIndex);
+		VkResult result = global.platform->swapchain->SubmitFrame(
+			commandBuffer, &imageIndex);
 
-		if (result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR) {
+		frameStarted = false;
+
+		if (result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR
+			|| global.platform->window->IsResized()) {
 			Resized();
+			global.platform->window->ResetFlags();
 		}
 		else if (result != VK_SUCCESS) {
 			ERROR((i32)result, util::Logger::Vulkan, "Failed to acquire image!");
 		}
-
-		frameStarted = false;
 	}
 
 	void Renderer::Resized() {
-		while (global.platform->window->IsMinimized());
+		while (global.platform->window->IsMinimized()) {
+			glfwWaitEvents();
+		}
 
 		vkDeviceWaitIdle(*global.platform->device);
 
@@ -110,7 +116,7 @@ namespace gfx {
 
 		extent = static_cast<uvec2>(vk::ExtentToVec(global.platform->swapchain->Extent()));
 
-		LOG("Window resized to $.", extent);
+		LOGNG(util::Logger::GFX, "Window resized to $.", extent);
 
 		for (auto& [name, pass] : passes) {
 			pass->Recreate(vk::VecToExtent(extent));

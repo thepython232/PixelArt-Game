@@ -14,9 +14,14 @@ namespace math {
 		using DataType = T;
 		static constexpr usize Length = 2;
 
+		static const vec<2, T> Up;
+		static const vec<2, T> Down;
+		static const vec<2, T> Right;
+		static const vec<2, T> Left;
+
 		constexpr vec() = default;
 		constexpr explicit vec(T s) : x(s), y(s) { }
-		constexpr explicit vec(T x, T y) : x(x), y(y) { }
+		constexpr vec(T x, T y) : x(x), y(y) { }
 		constexpr vec(const vec<2, T>& other)
 			: x(other.x), y(other.y) { }
 
@@ -166,6 +171,18 @@ namespace math {
 #endif
 		};
 	};
+
+	template<Numeric T>
+	const vec<2, T> vec<2, T>::Up = vec<2, T>(0, 1);
+
+	template<Numeric T>
+	const vec<2, T> vec<2, T>::Down = vec<2, T>(0, -1);
+
+	template<Numeric T>
+	const vec<2, T> vec<2, T>::Right = vec<2, T>(1, 0);
+
+	template<Numeric T>
+	const vec<2, T> vec<2, T>::Left = vec<2, T>(-1, 0);
 
 	//Common Functions
 	template<Numeric T>

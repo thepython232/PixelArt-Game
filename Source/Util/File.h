@@ -6,6 +6,7 @@
 
 #include <filesystem>
 #undef CreateFile
+#undef CreateDirectory
 
 namespace util {
 

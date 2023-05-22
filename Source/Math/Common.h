@@ -32,20 +32,48 @@ namespace math {
 	template<typename T>
 	concept Unsigned = !Signed<T>;
 
-	constexpr f64 PI = 3.141592653589793;
-	constexpr f64 TAU = 6.283185307179586;
-	constexpr f64 TWO_PI = TAU;
-	constexpr f64 PI_OVER_TWO = 1.570796326794896;
-	constexpr f64 PI_OVER_FOUR = 0.785398163397448;
-	constexpr f64 E = 2.718281828459045;
-	constexpr f64 ROOT_TWO = 1.414213562373095;
+	template<Floating T>
+	consteval T Pi() {
+		return T(3.141592653589793);
+	}
+
 	constexpr f64 EPSILON = std::numeric_limits<f64>::epsilon();
 	constexpr f32 MAX_FLOAT = std::numeric_limits<f32>::max();
 	constexpr f64 MAX_DOUBLE = std::numeric_limits<f64>::max();
 	constexpr f64 INFINITY = std::numeric_limits<f64>::infinity();
 	constexpr f64 NEGATIVE_INFINITY = -std::numeric_limits<f64>::infinity();
-	constexpr f64 TO_DEGREES = 180.0 / PI;
-	constexpr f64 TO_RADIANS = PI / 180.0;
+	constexpr f64 TO_DEGREES = 180.0 / Pi<f64>();
+	constexpr f64 TO_RADIANS = Pi<f64>() / 180.0;
+
+	template<Floating T>
+	consteval T Tau() {
+		return T(6.283185307179586);
+	}
+
+	template<Floating T>
+	consteval T TwoPi() {
+		return T(6.283185307179586);
+	}
+
+	template<Floating T>
+	consteval T PiOverTwo() {
+		return T(1.570796326794896);
+	}
+
+	template<Floating T>
+	consteval T PiOverFour() {
+		return T(0.785398163397448);
+	}
+
+	template<Floating T>
+	consteval T E() {
+		return T(2.718281828459045);
+	}
+
+	template<Floating T>
+	consteval T RootTwo() {
+		return T(1.414213562373095);
+	}
 
 	template<Numeric T>
 	constexpr inline T Min(T a, T b) {
@@ -85,6 +113,16 @@ namespace math {
 	template<Integral T>
 	constexpr inline T Mod(T a, T b) {
 		return a % b;
+	}
+
+	template<Numeric T>
+	inline T Radians(T degs) {
+		return degs * TO_RADIANS;
+	}
+
+	template<Numeric T>
+	inline T Degrees(T rads) {
+		return rads * TO_DEGREES;
 	}
 
 	template<Floating T>
@@ -176,7 +214,17 @@ namespace math {
 	}
 
 	template<Numeric T>
+	inline T Log2(T t) {
+		return std::log2(t);
+	}
+
+	template<Numeric T>
 	inline T LogBase(T t, T base) {
 		return Log(t) / Log(base);
+	}
+
+	template<Numeric T>
+	inline T Pow(T base, T power) {
+		return std::pow(base, power);
 	}
 }

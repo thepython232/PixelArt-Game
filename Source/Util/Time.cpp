@@ -32,8 +32,9 @@ namespace util {
 	Time::Time(CurrentTimeFn timeFn)
 		: timeFn(timeFn),
 		frame(this),
-		update(this),
 		tick(this, true),
+		update(this),
+		prepare(this),
 		render(this) {
 		lastSecond = CurrentTime();
 	}

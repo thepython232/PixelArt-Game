@@ -20,7 +20,7 @@ namespace math {
 
 		template<typename... Ts>
 			requires ((std::is_same_v<typename std::decay<Ts>::type, vec<R, T>> && ...) && sizeof...(Ts) == C)
-		constexpr explicit mat(Ts&&... cs) {
+		constexpr mat(Ts&&... cs) {
 			usize i = 0;
 			([] {
 				e[i++] = std::forward<Ts>(cs);
@@ -29,12 +29,19 @@ namespace math {
 
 		template<typename... Ts>
 			requires ((std::is_convertible_v<Ts, T> && ...) && sizeof...(Ts) == C * R)
-		constexpr explicit mat(Ts... ts) {
+		constexpr mat(Ts... ts) {
 			usize i = 0;
 			([] {
 				e[i / R][i % R] = ts;
 				i++;
 				} (), ...);
+		}
+
+		template<Numeric U>
+		constexpr explicit mat(const mat<C, R, U>& other) {
+			for (usize i = 0; i < R; i++) {
+				e[i] = static_cast<vec<C, T>>(other[i]);
+			}
 		}
 
 		constexpr inline vec<R, T>& operator[](usize i) {
@@ -86,10 +93,13 @@ namespace math {
 		}
 
 		constexpr inline void operator/=(T s) {
-			const typename types::IntToFloat<T>::Type invS = 1.0 / s;
 			for (usize i = 0; i < C; i++) {
-				e[i] *= invS;
+				e[i] /= s;
 			}
+		}
+
+		constexpr inline void operator*=(const mat<R, R, T>& other) {
+			*this = other * (*this);
 		}
 
 		constexpr inline mat<C, R, T> operator-() const {
@@ -110,7 +120,7 @@ namespace math {
 	};
 
 	template<usize C, usize R, Numeric T>
-	inline const mat<C, R, T> mat<C, R, T>::Zero = mat<C, R, T>((T)0);
+	inline const mat<C, R, T> mat<C, R, T>::Zero = mat<C, R, T>();
 
 	template<usize L, Numeric T>
 	struct mat<L, L, T> {
@@ -128,7 +138,7 @@ namespace math {
 
 		template<typename... Ts>
 			requires ((std::is_convertible_v<typename std::decay<Ts>::type, vec<L, T>> && ...) && sizeof...(Ts) == L)
-		constexpr explicit mat(Ts&&... cs) {
+		constexpr mat(Ts&&... cs) {
 			usize i = 0;
 			([this, &i, &cs] {
 				e[i++] = cs;
@@ -137,7 +147,7 @@ namespace math {
 
 		template<typename... Ts>
 			requires ((std::is_convertible_v<Ts, T> && ...) && sizeof...(Ts) == L * L)
-		constexpr explicit mat(Ts... ts) {
+		constexpr mat(Ts... ts) {
 			usize i = 0;
 			([&] {
 				e[i / L][i % L] = ts;
@@ -153,12 +163,19 @@ namespace math {
 
 		template<typename... Ts>
 			requires ((std::is_convertible_v<Ts, T> && ...) && sizeof...(Ts) == L)
-		constexpr explicit mat(Ts... ss) {
+		constexpr mat(Ts... ss) {
 			usize i = 0;
 			([] {
 				e[i][i] = ss;
 				i++;
 				} (), ...);
+		}
+
+		template<Numeric U>
+		constexpr explicit mat(const mat<L, L, U>& other) {
+			for (usize i = 0; i < L; i++) {
+				e[i] = static_cast<vec<L, T>>(other[i]);
+			}
 		}
 
 		constexpr inline vec<L, T>& operator[](usize i) {
@@ -210,10 +227,13 @@ namespace math {
 		}
 
 		constexpr inline void operator/=(T s) {
-			const typename types::IntToFloat<T>::Type invS = 1.0 / s;
 			for (usize i = 0; i < L; i++) {
-				e[i] *= invS;
+				e[i] /= s;
 			}
+		}
+
+		constexpr inline void operator*=(const mat<L, L, T>& other) {
+			*this = other * (*this);
 		}
 
 		constexpr inline mat<L, L, T> operator-() const {
@@ -345,10 +365,9 @@ constexpr inline math::mat<C, R, T> operator*(const math::mat<C, R, T>& m, T s) 
 
 template<usize C, usize R, math::Numeric T>
 constexpr inline math::mat<C, R, T> operator/(const math::mat<C, R, T>& m, T s) {
-	const typename types::IntToFloat<T>::Type invS = 1.0 / s;
 	math::mat<C, R, T> ret;
 	for (usize i = 0; i < C; i++) {
-		ret[i] = m[i] * invS;
+		ret[i] = m[i] / s;
 	}
 
 	return ret;
@@ -362,6 +381,17 @@ constexpr inline math::mat<B, C, T> operator*(const math::mat<A, B, T>& a, const
 		for (usize j = 0; j < C; j++) {
 			ret[i][j] = math::Dot(transA[i], b[j]);
 		}
+	}
+
+	return ret;
+}
+
+template<usize C, usize R, math::Numeric T>
+constexpr inline math::vec<C, T> operator*(const math::mat<C, R, T>& m, const math::vec<C, T>& v) {
+	math::vec<C, T> ret;
+	auto transM = math::Transpose(m);
+	for (usize i = 0; i < C; i++) {
+		ret[i] = math::Dot(transM[i], v);
 	}
 
 	return ret;

@@ -14,10 +14,17 @@ namespace math {
 		using DataType = T;
 		static constexpr usize Length = 3;
 
+		static const vec<3, T> Up;
+		static const vec<3, T> Down;
+		static const vec<3, T> Right;
+		static const vec<3, T> Left;
+		static const vec<3, T> Forward;
+		static const vec<3, T> Backward;
+
 		constexpr vec() = default;
 		constexpr explicit vec(T s)
 			: x(s), y(s), z(s) { }
-		constexpr explicit vec(T x, T y, T z)
+		constexpr vec(T x, T y, T z)
 			: x(x), y(y), z(z) { }
 
 		template<Numeric U>
@@ -312,6 +319,24 @@ namespace math {
 #endif
 		};
 	};
+
+	template<Numeric T>
+	const vec<3, T> vec<3, T>::Up = vec<3, T>(0, 1, 0);
+
+	template<Numeric T>
+	const vec<3, T> vec<3, T>::Down = vec<3, T>(0, -1, 0);
+
+	template<Numeric T>
+	const vec<3, T> vec<3, T>::Right = vec<3, T>(1, 0, 0);
+
+	template<Numeric T>
+	const vec<3, T> vec<3, T>::Left = vec<3, T>(-1, 0, 0);
+
+	template<Numeric T>
+	const vec<3, T> vec<3, T>::Forward = vec<3, T>(0, 0, 1);
+
+	template<Numeric T>
+	const vec<3, T> vec<3, T>::Backward = vec<3, T>(0, 0, -1);
 
 	template<Numeric T>
 	constexpr inline T Dot(const vec<3, T>& a, const vec<3, T>& b) {

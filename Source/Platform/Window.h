@@ -32,6 +32,8 @@ namespace platform {
 		ivec2 Pos() const { return pos; }
 
 		bool IsMinimized() const;
+		bool IsResized() const { return resized; }
+		void ResetFlags() { resized = false; }
 		bool ShouldClose() const;
 		void Close();
 
@@ -52,6 +54,7 @@ namespace platform {
 		static void MouseCallback(GLFWwindow* window, double xpos, double ypos);
 		static void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 		static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+		static void FocusCallback(GLFWwindow* window, int action);
 
 		GLFWwindow* window;
 		GLFWmonitor* monitor;
@@ -66,6 +69,8 @@ namespace platform {
 		b8 fullscreen;
 		ivec2 oldPos;
 		uvec2 oldSize;
+
+		b8 resized = false;
 
 		Keyboard* keyboard;
 		Mouse* mouse;

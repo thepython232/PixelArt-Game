@@ -20,6 +20,8 @@ namespace gfx {
 
 		void Resized();
 
+		inline f32 Aspect() const { return extent.x / static_cast<f32>(extent.y); }
+
 	private:
 		std::unordered_map<std::string, std::unique_ptr<RenderPass>> passes;
 

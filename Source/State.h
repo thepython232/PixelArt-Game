@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Util\Arena.h"
+#include "Util\Vulkan.h"
+
 //Forward declarations
 namespace util {
 
@@ -23,6 +26,11 @@ struct State {
 	util::Time* time;
 	platform::Platform* platform;
 	gfx::Renderer* renderer;
+
+	//Allocators
+	util::BumpAllocator allocator;
+	util::BumpAllocator tickAllocator;
+	util::LongAllocator<vk::MAX_FRAMES_IN_FLIGHT> longAllocator;
 };
 
 extern State& global;

@@ -35,31 +35,31 @@
 #define GAME_IS_ANDROID
 #endif
 
-typedef int                 i32;
-typedef unsigned int        u32;
-typedef short               i16;
-typedef unsigned short      u16;
-typedef signed char          i8;
-typedef unsigned char        u8;
-typedef long                i64;
-typedef unsigned long       u64;
-typedef float               f32;
-typedef double              f64;
+typedef int                  i32;
+typedef unsigned int         u32;
+typedef short                i16;
+typedef unsigned short       u16;
+typedef signed char           i8;
+typedef unsigned char         u8;
+typedef long long            i64; //TODO: fix this (or get a better compiler)
+typedef unsigned long long   u64;
+typedef float                f32;
+typedef double               f64;
 #ifdef GAME_HAS_FLOAT128
-typedef long double        f128;
+typedef long double         f128;
 #endif
-typedef bool                 b8;
-typedef unsigned int        b32;
+typedef bool                  b8;
+typedef unsigned int         b32;
 #ifdef GAME_HAS_INT128
-typedef long long          i128;
-typedef unsigned long long u128;
+typedef long long           i128;
+typedef unsigned long long  u128;
 #endif
 #ifdef GAME_IS_x64
-typedef long              isize;
-typedef unsigned long     usize;
+typedef long long          isize;
+typedef unsigned long long usize;
 #else
-typedef int               isize;
-typedef unsigned int      usize;
+typedef int                isize;
+typedef unsigned int       usize;
 #endif;
 
 #include <tuple>
@@ -101,6 +101,9 @@ namespace types {
 	struct IntToFloat<f64> {
 		using Type = f64;
 	};
+
+	template<typename T>
+	using ToFloatType = IntToFloat<T>::Type;
 
 	template<typename T, typename U>
 	struct IsSame {

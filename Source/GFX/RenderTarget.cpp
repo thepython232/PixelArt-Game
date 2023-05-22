@@ -36,7 +36,7 @@ namespace gfx {
 				samples,
 				usage,
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-				platform::Device::QueueFamilyIndices::Graphics,
+				vk::QueueFamilies::Graphics,
 				images[i],
 				memory[i]
 			), "Failed to create render texture!");
@@ -101,7 +101,7 @@ namespace gfx {
 				samples,
 				usage,
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-				platform::Device::QueueFamilyIndices::Graphics,
+				vk::QueueFamilies::Graphics,
 				images[i],
 				memory[i]
 			), "Failed to create render texture!");

@@ -31,13 +31,21 @@
 #endif
 
 #define __DECL_VULKAN_STRING_FUNCTION(_T) \
-inline std::string ToString(_T mode) { \
-	return std::string(string_##_T(mode)); \
+inline std::string ToString(_T val) { \
+	return std::string(string_##_T(val)); \
 }
 
 namespace vk {
 
 	constexpr u32 MAX_FRAMES_IN_FLIGHT = 2;
+
+	struct QueueFamilies {
+		enum {
+			Graphics = 1 << 0,
+			Present = 1 << 1,
+			Compute = 1 << 2
+		};
+	};
 
 	//Helper functions
 	inline bool IsDepthFormat(VkFormat format) {
@@ -130,10 +138,11 @@ namespace vk {
 		return VkExtent3D{ extent.width, extent.height, 1 };
 	}
 	
-	__DECL_VULKAN_STRING_FUNCTION(VkPresentModeKHR)
 	__DECL_VULKAN_STRING_FUNCTION(VkResult)
 	__DECL_VULKAN_STRING_FUNCTION(VkFormat)
+	__DECL_VULKAN_STRING_FUNCTION(VkPresentModeKHR)
 	__DECL_VULKAN_STRING_FUNCTION(VkColorSpaceKHR)
+	__DECL_VULKAN_STRING_FUNCTION(VkImageLayout)
 }
 
 constexpr inline bool operator==(const VkSurfaceFormatKHR& a, const VkSurfaceFormatKHR& b) {

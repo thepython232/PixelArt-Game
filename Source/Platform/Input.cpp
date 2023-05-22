@@ -286,15 +286,17 @@ namespace platform {
 	}
 
 	void Keyboard::KeyPressed(int key, int scancode, int action, int mods) {
-		if (action == GLFW_PRESS) {
-			keys[key].down = true;
-		}
-		else if (action == GLFW_REPEAT) {
-			keys[key].repeat = true;
-		}
-		else {
-			keys[key].down = false;
-			keys[key].repeat = false;
+		if (key != GLFW_KEY_UNKNOWN) {
+			if (action == GLFW_PRESS) {
+				keys[key].down = true;
+			}
+			else if (action == GLFW_REPEAT) {
+				keys[key].repeat = true;
+			}
+			else {
+				keys[key].down = false;
+				keys[key].repeat = false;
+			}
 		}
 	}
 

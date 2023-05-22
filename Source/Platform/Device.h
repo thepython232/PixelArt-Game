@@ -19,12 +19,6 @@ namespace platform {
 			inline bool IsComplete() {
 				return graphicsFamily.has_value() && presentFamily.has_value() && computeFamily.has_value();
 			}
-
-			enum Type {
-				Graphics = 1 << 0,
-				Present = 1 << 1,
-				Compute = 1 << 2
-			};
 		};
 
 		struct SwapchainCapabilities {
@@ -51,13 +45,19 @@ namespace platform {
 		inline VkCommandPool GraphicsPool() const { return graphicsPool; }
 		inline VkCommandPool ComputePool() const { return computePool; }
 
+		VkPhysicalDeviceProperties Properties() const;
+		VkPhysicalDeviceFeatures Features() const;
+		VkPhysicalDeviceLimits Limits() const {
+			return Properties().limits;
+		}
+
 		void LogInfo() const;
 
 		VkResult CreateBuffer(
 			VkDeviceSize size,
 			VkBufferUsageFlags usage,
 			VkMemoryPropertyFlags memProps,
-			QueueFamilyIndices::Type families,
+			uint32_t families,
 			VkBuffer& buffer,
 			VkDeviceMemory& memory
 		) const;
@@ -72,7 +72,7 @@ namespace platform {
 			VkSampleCountFlagBits samples,
 			VkImageUsageFlags usage,
 			VkMemoryPropertyFlags memProps,
-			QueueFamilyIndices::Type families,
+			uint32_t families,
 			VkImage& image,
 			VkDeviceMemory& memory
 		) const;

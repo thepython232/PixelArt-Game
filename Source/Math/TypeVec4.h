@@ -17,7 +17,7 @@ namespace math {
 		constexpr vec() = default;
 		constexpr explicit vec(T s)
 			: x(s), y(s), z(s), w(s) { }
-		constexpr explicit vec(T x, T y, T z, T w)
+		constexpr vec(T x, T y, T z, T w)
 			: x(x), y(y), z(z), w(w) { }
 
 		constexpr vec(const vec<4, T>& other)

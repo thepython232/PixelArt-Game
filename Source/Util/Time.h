@@ -32,7 +32,7 @@ namespace util {
 			Time* time;
 
 			friend Time;
-		} frame, update, tick, render;
+		} frame, tick, update, prepare, render;
 
 		Time(CurrentTimeFn timeFn);
 

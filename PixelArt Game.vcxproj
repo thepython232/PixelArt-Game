@@ -114,7 +114,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__PRETTY_FILE__="%(Filename)%(Extension)"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Dev\VulkanSDK\Include;C:\Dev\glfw\include;$(SolutionDir)Source;C:\Dev\Toml++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Dev\VulkanSDK\Include;C:\Dev\glfw\include;$(SolutionDir)Source;C:\Dev\Toml++;C:\Dev\STBImage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -135,7 +135,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__PRETTY_FILE__="%(Filename)%(Extension)"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Dev\VulkanSDK\Include;C:\Dev\glfw\include;$(SolutionDir)Source;C:\Dev\Toml++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Dev\VulkanSDK\Include;C:\Dev\glfw\include;$(SolutionDir)Source;C:\Dev\Toml++;C:\Dev\STBImage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -151,12 +151,17 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\GFX\Buffer.cpp" />
+    <ClCompile Include="Source\GFX\ComputePipeline.cpp" />
+    <ClCompile Include="Source\GFX\Descriptors.cpp" />
     <ClCompile Include="Source\GFX\GraphicsPipeline.cpp" />
     <ClCompile Include="Source\GFX\Pipeline.cpp" />
     <ClCompile Include="Source\GFX\Renderer.cpp" />
     <ClCompile Include="Source\GFX\RenderPass.cpp" />
     <ClCompile Include="Source\GFX\RenderTarget.cpp" />
+    <ClCompile Include="Source\GFX\Texture.cpp" />
     <ClCompile Include="Source\GFX\TriangleRenderer.cpp" />
+    <ClCompile Include="Source\GFX\Vertex.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Platform\Device.cpp" />
     <ClCompile Include="Source\Platform\Input.cpp" />
@@ -164,20 +169,35 @@
     <ClCompile Include="Source\Platform\Platform.cpp" />
     <ClCompile Include="Source\Platform\Swapchain.cpp" />
     <ClCompile Include="Source\Platform\Window.cpp" />
+    <ClCompile Include="Source\Util\Arena.cpp" />
     <ClCompile Include="Source\Util\Configuration.cpp" />
     <ClCompile Include="Source\Util\File.cpp" />
     <ClCompile Include="Source\Util\Time.cpp" />
+    <ClInclude Include="Source\GFX\Buffer.h" />
+    <ClInclude Include="Source\GFX\ComputePipeline.h" />
+    <ClInclude Include="Source\GFX\Descriptors.h" />
     <ClInclude Include="Source\GFX\GraphicsPipeline.h" />
     <ClInclude Include="Source\GFX\Pipeline.h" />
     <ClInclude Include="Source\GFX\Renderer.h" />
     <ClInclude Include="Source\GFX\RenderPass.h" />
     <ClInclude Include="Source\GFX\RenderTarget.h" />
+    <ClInclude Include="Source\GFX\Texture.h" />
     <ClInclude Include="Source\GFX\TriangleRenderer.h" />
     <ClInclude Include="Source\GFX\Vertex.h" />
     <ClInclude Include="Source\Math\Common.h" />
     <ClInclude Include="Source\Math\Math.h" />
     <ClInclude Include="Source\Math\Swizzle.h" />
+    <ClInclude Include="Source\Math\Transform.h" />
     <ClInclude Include="Source\Math\TypeMat.h" />
+    <ClInclude Include="Source\Math\TypeMat2.h" />
+    <ClInclude Include="Source\Math\TypeMat2x3.h" />
+    <ClInclude Include="Source\Math\TypeMat2x4.h" />
+    <ClInclude Include="Source\Math\TypeMat3.h" />
+    <ClInclude Include="Source\Math\TypeMat3x2.h" />
+    <ClInclude Include="Source\Math\TypeMat3x4.h" />
+    <ClInclude Include="Source\Math\TypeMat4.h" />
+    <ClInclude Include="Source\Math\TypeMat4x2.h" />
+    <ClInclude Include="Source\Math\TypeMat4x3.h" />
     <ClInclude Include="Source\Math\TypeVec.h" />
     <ClInclude Include="Source\Math\TypeVec2.h" />
     <ClInclude Include="Source\Math\TypeVec3.h" />
@@ -189,6 +209,7 @@
     <ClInclude Include="Source\Platform\Swapchain.h" />
     <ClInclude Include="Source\Platform\Window.h" />
     <ClInclude Include="Source\State.h" />
+    <ClInclude Include="Source\Util\Arena.h" />
     <ClInclude Include="Source\Util\Configuration.h" />
     <ClInclude Include="Source\Util\File.h" />
     <ClInclude Include="Source\Util\GLFW.h" />

@@ -9,16 +9,26 @@ namespace gfx {
 
 	template<typename T>
 	concept IsVertex = requires {
-		requires std::same_as<decltype(T::Binding), VkVertexInputBindingDescription>;
-		requires std::same_as<decltype(T::Attributes), std::vector<VkVertexInputAttributeDescription>>;
+		requires std::same_as<decltype(T::Binding), const VkVertexInputBindingDescription>;
+		requires std::same_as<decltype(T::Attributes), const std::vector<VkVertexInputAttributeDescription>>;
 	};
 
 	struct VertexPosColor {
 		vec2 pos;
 		vec3 color;
 
-		static VkVertexInputBindingDescription Binding;
+		static const VkVertexInputBindingDescription Binding;
 
-		static std::vector<VkVertexInputAttributeDescription> Attributes;
+		static const std::vector<VkVertexInputAttributeDescription> Attributes;
+	};
+
+	struct VertexPosColorUv {
+		vec3 pos;
+		vec3 color;
+		vec2 uv;
+
+		static const VkVertexInputBindingDescription Binding;
+
+		static const std::vector<VkVertexInputAttributeDescription> Attributes;
 	};
 }

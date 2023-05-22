@@ -8,6 +8,8 @@
 State state;
 State& global = state;
 
+std::function<void(bool)> frameFunction;
+
 int main(UNUSED int argc, UNUSED char* argv[]) {
 	util::Logger log{ std::cout, std::cerr };
 	state.log = &log;
@@ -38,13 +40,28 @@ int main(UNUSED int argc, UNUSED char* argv[]) {
 
 	LOG("Hello, World!");
 
-	while (!platform.window->ShouldClose()) {
+	frameFunction = [&](bool poll) {
 		time.frame.Begin();
+
+		time.Update();
+		for (u32 i = 0; i < time.NumTicks(); i++) {
+			time.tick.Begin();
+			platform.keyboard.PrepareTick();
+			platform.mouse.PrepareTick();
+
+			//TODO: tick
+
+			state.tickAllocator.Clear();
+			time.tick.End();
+		}
 
 		time.update.Begin();
 		platform.keyboard.Prepare();
 		platform.mouse.Prepare();
-		glfwPollEvents();
+
+		if (poll) {
+			glfwPollEvents();
+		}
 
 		//TODO: update
 
@@ -54,27 +71,30 @@ int main(UNUSED int argc, UNUSED char* argv[]) {
 
 		time.update.End();
 
-		time.Update();
-		for (u32 i = 0; i < time.NumTicks(); i++) {
-			time.tick.Begin();
-			platform.keyboard.PrepareTick();
-			platform.mouse.PrepareTick();
+		VkCommandBuffer commandBuffer = renderer.Begin();
 
-			//TODO; tick
+		time.prepare.Begin();
 
-			time.tick.End();
-		}
+		//TODO: prepare
+
+		time.prepare.End();
 
 		time.render.Begin();
 
 		//TODO: render
-		VkCommandBuffer commandBuffer = renderer.Begin();
 		renderer.Composite(commandBuffer);
 		renderer.End(commandBuffer);
 
 		time.render.End();
 
+		state.allocator.Clear();
+		state.longAllocator.Clear();
 		time.frame.End();
+	};
+
+	startTime = std::chrono::high_resolution_clock::now();
+	while (!platform.window->ShouldClose()) {
+		frameFunction(true);
 	}
 
 	renderer.Destroy();

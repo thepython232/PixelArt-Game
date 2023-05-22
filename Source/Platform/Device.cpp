@@ -1,16 +1,16 @@
 #include "Device.h"
 
-static std::vector<uint32_t> UniqueQueueFamilies(const platform::Device::QueueFamilyIndices& indices, platform::Device::QueueFamilyIndices::Type types) {
+static std::vector<uint32_t> UniqueQueueFamilies(const platform::Device::QueueFamilyIndices& indices, uint32_t types) {
 	std::vector<uint32_t> families;
 
-	if (types & platform::Device::QueueFamilyIndices::Graphics) {
+	if (types & vk::QueueFamilies::Graphics) {
 		families.push_back(*indices.graphicsFamily);
 	}
-	if ((types & platform::Device::QueueFamilyIndices::Present)
+	if ((types & vk::QueueFamilies::Present)
 		&& indices.graphicsFamily != indices.presentFamily) {
 		families.push_back(*indices.presentFamily);
 	}
-	if ((types & platform::Device::QueueFamilyIndices::Compute)
+	if ((types & vk::QueueFamilies::Compute)
 		&& indices.graphicsFamily != indices.computeFamily
 		&& indices.presentFamily != indices.computeFamily) {
 		families.push_back(*indices.computeFamily);
@@ -83,6 +83,7 @@ namespace platform {
 		ASSERT(physicalDevice != VK_NULL_HANDLE, "Failed to find a suitable GPU!");
 
 		VkPhysicalDeviceFeatures enabledFeatures{};
+		enabledFeatures.samplerAnisotropy = VK_TRUE;
 
 		auto indices = GetQueueFamilyIndices();
 		std::vector<VkDeviceQueueCreateInfo> queues{};
@@ -141,6 +142,18 @@ namespace platform {
 		vkDestroyDevice(device, nullptr);
 
 		vkDestroySurfaceKHR(instance, surface, nullptr);
+	}
+
+	VkPhysicalDeviceProperties Device::Properties() const {
+		VkPhysicalDeviceProperties props;
+		vkGetPhysicalDeviceProperties(physicalDevice, &props);
+		return props;
+	}
+
+	VkPhysicalDeviceFeatures Device::Features() const {
+		VkPhysicalDeviceFeatures features;
+		vkGetPhysicalDeviceFeatures(physicalDevice, &features);
+		return features;
 	}
 
 	void Device::LogInfo() const {
@@ -239,7 +252,7 @@ namespace platform {
 		VkDeviceSize size,
 		VkBufferUsageFlags usage,
 		VkMemoryPropertyFlags memProps,
-		QueueFamilyIndices::Type families,
+		uint32_t families,
 		VkBuffer& buffer,
 		VkDeviceMemory& memory
 	) const {
@@ -289,7 +302,7 @@ namespace platform {
 		VkSampleCountFlagBits samples,
 		VkImageUsageFlags usage,
 		VkMemoryPropertyFlags memProps,
-		QueueFamilyIndices::Type families,
+		uint32_t families,
 		VkImage& image,
 		VkDeviceMemory& memory
 	) const {

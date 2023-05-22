@@ -2,8 +2,8 @@
 
 #include "Types.h"
 #include "Std.h"
-#include "State.h"
 #include "Math.h"
+#include "State.h"
 
 #define LOG(_f, ...) global.log->Log(_f, util::Logger::General, util::Logger::Debug, __PRETTY_FILE__, __LINE__, __func__, __VA_ARGS__)
 #define WARN(_f, ...) global.log->Log(_f, util::Logger::General, util::Logger::Warn, __PRETTY_FILE__, __LINE__, __func__, __VA_ARGS__)
@@ -89,6 +89,56 @@ namespace util {
 				if (i < L - 1) s += ", ";
 			}
 			s += ")";
+			return s;
+		}
+
+		template<math::Numeric T, usize C, usize R>
+		static std::string ToString(const math::mat<C, R, T>& m) {
+			std::string s;
+			if constexpr (std::same_as<T, f64>) {
+				s += "d";
+			}
+			else if constexpr (std::same_as<T, b8>) {
+				s += "b";
+			}
+			else if constexpr (math::Integral<T>) {
+				if constexpr (math::Signed<T>) {
+					s += "i";
+				}
+				else {
+					s += "u";
+				}
+			}
+
+			s += "mat";
+
+			if constexpr (C == R) {
+				s += ToString(C);
+			}
+			else {
+				s += ToString(C) + ToString(R);
+			}
+
+			s += "{\n";
+
+			for (usize i = 0; i < R; i++) {
+				s += "\t";
+
+				for (usize j = 0; j < C; j++) {
+					s += ToString(m[j][i]);
+
+					if (j < C - 1) {
+						s += ", ";
+					}
+				}
+
+				if (i < R - 1) {
+					s += ",\n";
+				}
+			}
+
+			s += "\n}";
+
 			return s;
 		}
 

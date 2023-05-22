@@ -3,6 +3,8 @@
 #include "Input.h"
 #include "Util\Log.h"
 
+extern std::function<void(bool)> frameFunction;
+
 static GLFWmonitor* WindowMonitor(GLFWwindow* window, const ivec2& windowPos, const uvec2& windowSize) {
 	int count;
 	GLFWmonitor** monitors = glfwGetMonitors(&count);
@@ -88,6 +90,7 @@ namespace platform {
 		glfwSetCursorPosCallback(window, &Window::MouseCallback);
 		glfwSetCursorEnterCallback(window, &Window::MouseEnterCallback);
 		glfwSetMouseButtonCallback(window, &Window::MouseButtonCallback);
+		glfwSetWindowFocusCallback(window, &Window::FocusCallback);
 
 		glfwDefaultWindowHints();
 
@@ -103,6 +106,9 @@ namespace platform {
 		else {
 			glfwSetCursor(window, cursor);
 		}
+
+		//Prevents the window from freezing at very small sizes or zero
+		glfwSetWindowSizeLimits(window, 100, 100, GLFW_DONT_CARE, GLFW_DONT_CARE);
 
 		glfwShowWindow(window);
 	}
@@ -121,6 +127,7 @@ namespace platform {
 	}
 
 	bool Window::IsMinimized() const {
+		glfwGetWindowSize(window, (int*)&size.x, (int*)&size.y);
 		return size.x == 0 || size.y == 0;
 	}
 
@@ -182,10 +189,11 @@ namespace platform {
 	void Window::FramebufferResizeCallback(GLFWwindow* window, int width, int height) {
 		Window* ptr = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
 		ptr->fullSize = uvec2(static_cast<u32>(width), static_cast<u32>(height));
+		ptr->resized = true;
 	}
 
 	void Window::RefreshCallback(GLFWwindow* window) {
-		//TODO: redraw the screen
+		frameFunction(false);
 	}
 
 	void Window::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -211,5 +219,15 @@ namespace platform {
 	void Window::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
 		Window* ptr = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
 		ptr->mouse->ButtonPressed(button, action, mods);
+	}
+
+	void Window::FocusCallback(GLFWwindow* window, int focused) {
+		Window* ptr = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+		if (focused) {
+			glfwGetWindowSize(window, (int*)&ptr->size.x, (int*)&ptr->size.y);
+		}
+		else {
+			ptr->size = uvec2(0, 0);
+		}
 	}
 }

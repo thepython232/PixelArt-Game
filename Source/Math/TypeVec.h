@@ -11,7 +11,7 @@ namespace math {
 		static constexpr usize Length = L;
 
 		constexpr vec() = default;
-		constexpr vec(T s) {
+		constexpr explicit vec(T s) {
 			for (usize i = 0; i < L; i++) {
 				e[i] = s;
 			}
@@ -19,14 +19,14 @@ namespace math {
 
 		template<typename... Ts>
 			requires ((std::is_convertible_v<Ts, T> && ...) && sizeof...(Ts) == L)
-		constexpr explicit vec(Ts... ts) {
+		constexpr vec(Ts... ts) {
 			usize i = 0;
 			([&i] {
 				e[i++] = ts;
 				}, ...);
 		}
 
-		vec(const vec<L, T>& other) {
+		constexpr vec(const vec<L, T>& other) {
 			for (usize i = 0; i < L; i++) {
 				e[i] = other[i];
 			}
@@ -197,7 +197,7 @@ namespace math {
 
 	template<usize L, Numeric T>
 	constexpr inline vec<L, T> Lerp(const vec<L, T>& a, const vec<L, T>& b, f32 t) {
-		return (1.f - t) * a + t * b;
+		return (1 - t) * a + t * b;
 	}
 
 	template<usize L, Numeric T>
@@ -208,6 +208,11 @@ namespace math {
 	template<usize L, Numeric T>
 	constexpr inline f32 Distance(const vec<L, T>& a, const vec<L, T>& b) {
 		return Length(a - b);
+	}
+
+	template<usize L, Numeric T>
+	constexpr inline vec<L, T> Normalize(const vec<L, T>& v) {
+		return v / Length(v);
 	}
 }
 
